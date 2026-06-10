@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Administrative Control Panel for Grievance System. Verification and redressal dashboards.">
+  <title>Admin Control Panel</title>
+  
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Custom Premium Stylesheet -->
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="light-theme">
+
+  <!-- Main Shell Container -->
+  <div id="app-shell" class="app-shell no-sidebar">
+    
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <!-- Sidebar Toggle Hamburger (Admin Logged In Only) -->
+        <button id="sidebar-toggle" class="sidebar-toggle-btn" aria-label="Toggle Sidebar" style="display: none;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+        <div class="portal-logo" id="admin-logo-nav">
+          <div class="logo-icon">AC</div>
+          <div class="logo-text">
+            <h1>Admin Control</h1>
+            <span>Grievance System Operations</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="header-right">
+        <!-- Dark Mode Toggle -->
+        <button id="theme-toggle" class="header-action-btn" aria-label="Toggle Dark Mode" title="Toggle Theme">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-light"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+        </button>
+
+        <span class="badge badge-assigned" id="admin-role-badge" style="display: none;">Admin</span>
+      </div>
+    </header>
+
+    <!-- Collapsible Sidebar (Admin Logged In Only) -->
+    <aside class="app-sidebar" id="app-sidebar">
+      <div class="sidebar-nav">
+        <a class="sidebar-link active" data-view="admin-dashboard">
+          📊 Dashboard Summary
+        </a>
+        <a class="sidebar-link" data-view="admin-queue">
+          📋 Complaints Queue
+        </a>
+        <a class="sidebar-link" data-view="admin-users">
+          👥 Manage Users
+        </a>
+        <a class="sidebar-link" data-view="admin-departments">
+          🏢 Departments
+        </a>
+        <a class="sidebar-link" data-view="admin-reports">
+          📈 Reports Module
+        </a>
+        <a class="sidebar-link" data-view="admin-profile">
+          👤 Admin Profile
+        </a>
+      </div>
+      <div class="sidebar-footer">
+        <p>&copy; 2026 Admin Portal</p>
+        <button class="btn btn-sm btn-danger mt-2 w-100" id="sidebar-logout-btn">Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Container -->
+    <main class="app-main" id="app-main">
+      
+      <!-- ================= 1. ADMIN LOGIN VIEW ================= -->
+      <section id="admin-login-view" class="view-section active-view">
+        <div class="auth-page-container">
+          <div class="auth-card">
+            <div class="auth-header">
+              <h3>Administrator Portal</h3>
+              <p>Verify citizen complaints and record redressal remarks.</p>
+            </div>
+            
+            <form id="admin-login-form">
+              <div class="form-group">
+                <label for="admin-email">Email or Username</label>
+                <input type="text" id="admin-email" class="form-control" placeholder="admin" required>
+              </div>
+              <div class="form-group">
+                <label for="admin-password">Password</label>
+                <input type="password" id="admin-password" class="form-control" placeholder="••••••••" required>
+              </div>
+              
+              <div class="form-error mb-3" id="admin-login-error">Invalid Administrative Credentials.</div>
+              
+              <button type="submit" class="btn btn-primary w-100 mb-3">Sign In</button>
+            </form>
+            
+            <div class="auth-footer text-center">
+              <a href="/" class="auth-toggle-link">&larr; Return to Citizen Website</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 2. ADMIN DASHBOARD VIEW ================= -->
+      <section id="admin-dashboard-view" class="view-section">
+        <div class="page-header mb-4">
+          <h2 class="fw-bold mb-1">Administrative Overview</h2>
+          <p class="text-muted mb-0">System performance statistics and real-time database analytics.</p>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="dashboard-grid">
+          <div class="dashboard-card">
+            <div class="card-details">
+              <h4>Total Citizens</h4>
+              <div class="card-value" id="ad-stat-users">0</div>
+            </div>
+            <div class="card-icon-container card-icon-primary">👥</div>
+          </div>
+          <div class="dashboard-card">
+            <div class="card-details">
+              <h4>Total Complaints</h4>
+              <div class="card-value" id="ad-stat-total">0</div>
+            </div>
+            <div class="card-icon-container card-icon-primary" style="background-color:rgba(59,130,246,0.08);">📊</div>
+          </div>
+          <div class="dashboard-card">
+            <div class="card-details">
+              <h4>Pending Action</h4>
+              <div class="card-value" id="ad-stat-pending">0</div>
+            </div>
+            <div class="card-icon-container card-icon-warning">⏳</div>
+          </div>
+          <div class="dashboard-card">
+            <div class="card-details">
+              <h4>Resolved Cases</h4>
+              <div class="card-value" id="ad-stat-resolved">0</div>
+            </div>
+            <div class="card-icon-container card-icon-success">✔️</div>
+          </div>
+        </div>
+
+        <!-- Chart Visualization Panels -->
+        <div class="row g-4 mb-4">
+          <!-- Monthly Trend Line/Bar Chart -->
+          <div class="col-lg-7">
+            <div class="card-section h-100">
+              <h3 class="card-section-title">Monthly Complaint Trends (2026)</h3>
+              <div style="height: 300px; position: relative;">
+                <canvas id="monthlyTrendChart"></canvas>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Category-wise Statistics Pie Chart -->
+          <div class="col-lg-5">
+            <div class="card-section h-100">
+              <h3 class="card-section-title">Category-wise Statistics</h3>
+              <div style="height: 300px; position: relative; display: flex; align-items: center; justify-content: center;">
+                <canvas id="categoryDistributionChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 3. ADMIN COMPLAINTS QUEUE VIEW ================= -->
+      <section id="admin-queue-view" class="view-section">
+        <div class="card-section">
+          <div class="card-section-title d-flex justify-content-between align-items-center">
+            <span>Grievance Master Queue</span>
+          </div>
+
+          <!-- Advanced Filters Grid -->
+          <div class="row g-3 mb-4 p-3 bg-light rounded" style="font-size: 13px;">
+            <div class="col-md-3">
+              <label class="form-label fw-bold text-muted">Search Keyword</label>
+              <input type="text" id="filter-search" class="form-control form-control-sm" placeholder="ID or Citizen Name...">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-bold text-muted">Status</label>
+              <select id="filter-status" class="form-control form-control-sm">
+                <option value="all">All Statuses</option>
+                <option value="Submitted">Submitted</option>
+                <option value="Under Review">Under Review</option>
+                <option value="Assigned">Assigned</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-bold text-muted">Department</label>
+              <select id="filter-department" class="form-control form-control-sm">
+                <option value="all">All Departments</option>
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-bold text-muted">Category</label>
+              <select id="filter-category" class="form-control form-control-sm">
+                <option value="all">All Categories</option>
+                <option value="Roads & Infrastructure">Roads & Infrastructure</option>
+                <option value="Water Supply">Water Supply</option>
+                <option value="Electricity">Electricity</option>
+                <option value="Sanitation">Sanitation</option>
+                <option value="Health Services">Health Services</option>
+                <option value="Education">Education</option>
+                <option value="Transport">Transport</option>
+                <option value="Public Safety">Public Safety</option>
+                <option value="Government Schemes">Government Schemes</option>
+                <option value="Environment">Environment</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-bold text-muted">Priority</label>
+              <select id="filter-priority" class="form-control form-control-sm">
+                <option value="all">All Priorities</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-bold text-muted">Start Date</label>
+              <input type="date" id="filter-start-date" class="form-control form-control-sm">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-bold text-muted">End Date</label>
+              <input type="date" id="filter-end-date" class="form-control form-control-sm">
+            </div>
+            <div class="col-md-3 d-flex align-items-end gap-2">
+              <button class="btn btn-primary btn-sm w-100" id="btn-apply-filters">Apply Filters</button>
+              <button class="btn btn-secondary btn-sm w-100" id="btn-reset-filters">Reset</button>
+            </div>
+          </div>
+
+          <!-- Queue Table -->
+          <div class="table-responsive">
+            <table class="custom-table" id="admin-complaints-table">
+              <thead>
+                <tr>
+                  <th style="cursor:pointer;" id="sort-id">Complaint ID ↕️</th>
+                  <th style="cursor:pointer;" id="sort-name">Citizen Name ↕️</th>
+                  <th>Grievance Summary</th>
+                  <th>Category</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th style="cursor:pointer;" id="sort-date">Submission Date ↕️</th>
+                  <th>Actions Column</th>
+                </tr>
+              </thead>
+              <tbody id="admin-complaints-tbody">
+                <!-- Loaded dynamically -->
+                <tr><td colspan="8" class="text-center text-muted">No grievances in queue.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination Control -->
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="text-muted small" id="queue-pagination-info">Showing 0 of 0 complaints</div>
+            <div class="d-flex gap-1">
+              <button class="btn btn-secondary btn-sm" id="btn-pagination-prev">&laquo; Previous</button>
+              <button class="btn btn-secondary btn-sm" id="btn-pagination-next">Next &raquo;</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 4. ADMIN COMPLAINT DETAILS INSPECTOR ================= -->
+      <section id="admin-complaint-details-view" class="view-section">
+        <div class="container" style="max-width: 900px;">
+          <div class="back-btn-wrapper">
+            <button class="back-btn" id="btn-details-back">← Back to Queue</button>
+          </div>
+          
+          <div class="card-section">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+              <h3 class="fw-bold mb-0" id="inspector-complaint-id">COMP-2026-000001</h3>
+              <span id="inspector-status-badge" class="badge">Submitted</span>
+            </div>
+
+            <!-- Complaint Meta Details -->
+            <div class="row g-3 mb-4" style="font-size: 14px;">
+              <div class="col-md-6"><strong>Citizen Name:</strong> <span id="inspector-citizen-name">Name</span></div>
+              <div class="col-md-6"><strong>Citizen Contact:</strong> <span id="inspector-citizen-phone">Phone</span> | <span id="inspector-citizen-email">Email</span></div>
+              <div class="col-md-6"><strong>Grievance Title:</strong> <span id="inspector-title">Title</span></div>
+              <div class="col-md-6"><strong>Category:</strong> <span id="inspector-category">Category</span></div>
+              <div class="col-md-6"><strong>Assigned Department:</strong> <span id="inspector-department">Dept</span></div>
+              <div class="col-md-6"><strong>Priority:</strong> <span id="inspector-priority" class="badge">Medium</span></div>
+              <div class="col-md-6"><strong>Submission Date:</strong> <span id="inspector-submission-date">Date</span></div>
+              <div class="col-md-6"><strong>Resolution Date:</strong> <span id="inspector-resolution-date">Pending</span></div>
+              <div class="col-12"><strong>Incident Location:</strong> <span id="inspector-location">Location Address</span></div>
+              <div class="col-12"><strong>Citizen Address:</strong> <span id="inspector-citizen-address">Home Address</span></div>
+              <div class="col-12"><strong>FULL Description:</strong> <p class="mt-1 p-3 bg-light rounded text-dark lh-base" id="inspector-desc" style="white-space: pre-wrap;"></p></div>
+              <div class="col-12" id="inspector-attachment-row" style="display: none;">
+                <strong>Supporting Attachment Document:</strong>
+                <a href="" target="_blank" class="btn btn-sm btn-secondary ms-2" id="inspector-view-doc-btn">📄 View Document</a>
+              </div>
+            </div>
+
+            <!-- Redressal / Action Form Panel -->
+            <div class="border-top pt-4 mt-4">
+              <h4 class="fw-bold mb-3 text-secondary">Manage Complaint Status & Assignment</h4>
+              
+              <form id="inspector-status-update-form">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label for="update-status-select" class="form-label fw-bold">Update Status</label>
+                    <select id="update-status-select" class="form-control" required>
+                      <option value="Submitted">Submitted</option>
+                      <option value="Under Review">Under Review</option>
+                      <option value="Assigned">Assigned</option>
+                      <option value="In Progress">In Progress</option>
+                      <option value="Resolved">Resolved</option>
+                      <option value="Rejected">Rejected</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="update-dept-select" class="form-label fw-bold">Re-assign Department</label>
+                    <select id="update-dept-select" class="form-control">
+                      <!-- Populated dynamically -->
+                    </select>
+                  </div>
+                  <div class="col-12">
+                    <label for="update-remarks" class="form-label fw-bold">Official Remarks (Visible to Citizen)</label>
+                    <textarea id="update-remarks" class="form-control" rows="2" placeholder="Provide progress or resolution remarks..."></textarea>
+                  </div>
+                  <div class="col-12">
+                    <label for="update-comment" class="form-label fw-bold">Activity Log Comment (Internal history timeline note)</label>
+                    <input type="text" id="update-comment" class="form-control" placeholder="e.g. Complaint forwarded to Area Engineer Ravi Kumar" required>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                  <button type="submit" class="btn btn-primary">Save Updates</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Detailed Audit Timeline -->
+            <h4 class="fw-bold mt-5 mb-3">Grievance Processing Timeline History</h4>
+            <div class="timeline-container" id="inspector-timeline">
+              <!-- Steps loaded dynamically -->
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 5. MANAGE USERS MODULE VIEW ================= -->
+      <section id="admin-users-view" class="view-section">
+        <div class="card-section">
+          <div class="card-section-title">
+            <span>Manage Registered Citizens</span>
+          </div>
+
+          <!-- Filter Search bar -->
+          <div class="table-filter-bar">
+            <input type="text" id="user-filter-search" class="form-control" placeholder="Search by Name, Email, or Mobile..." style="max-width: 320px;">
+            <button class="btn btn-primary btn-sm" id="btn-apply-user-filters">Search Users</button>
+          </div>
+
+          <!-- Users Table -->
+          <div class="table-responsive">
+            <table class="custom-table" id="admin-users-table">
+              <thead>
+                <tr>
+                  <th>User ID</th>
+                  <th>Citizen Name</th>
+                  <th>Email Address</th>
+                  <th>Mobile Number</th>
+                  <th>Status</th>
+                  <th>Registration Date</th>
+                  <th>Actions Column</th>
+                </tr>
+              </thead>
+              <tbody id="admin-users-tbody">
+                <!-- Dynamically loaded -->
+                <tr><td colspan="7" class="text-center text-muted">No citizens found.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination user controls -->
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="text-muted small" id="user-pagination-info">Showing 0 of 0 users</div>
+            <div class="d-flex gap-1">
+              <button class="btn btn-secondary btn-sm" id="btn-user-prev">&laquo; Prev</button>
+              <button class="btn btn-secondary btn-sm" id="btn-user-next">Next &raquo;</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 6. USER DETAILS PAGE VIEW ================= -->
+      <section id="admin-user-details-view" class="view-section">
+        <div class="container" style="max-width: 900px;">
+          <div class="back-btn-wrapper">
+            <button class="back-btn" id="btn-user-details-back">← Back to Citizens List</button>
+          </div>
+
+          <div class="row g-4">
+            <!-- User Profile card -->
+            <div class="col-md-5">
+              <div class="card-section">
+                <h4 class="card-section-title">User Information</h4>
+                <div class="text-center mb-4">
+                  <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center" style="width: 70px; height: 70px; font-size: 28px;">👤</div>
+                  <h5 class="fw-bold mt-2" id="u-details-name">Citizen Name</h5>
+                  <span id="u-details-status" class="badge">Active</span>
+                </div>
+                <div class="d-flex flex-column gap-2" style="font-size: 13.5px;">
+                  <div><strong>Email:</strong> <span id="u-details-email">Email</span></div>
+                  <div><strong>Mobile:</strong> <span id="u-details-mobile">Mobile</span></div>
+                  <div><strong>Aadhaar:</strong> <span id="u-details-aadhaar">Aadhaar</span></div>
+                  <div><strong>Registered:</strong> <span id="u-details-date">Date</span></div>
+                  <div><strong>Address:</strong> <p class="text-muted mb-0 mt-1 p-2 bg-light rounded" id="u-details-address"></p></div>
+                </div>
+                
+                <div class="border-top mt-4 pt-3 d-flex gap-2">
+                  <button class="btn btn-success btn-sm w-100" id="btn-user-activate">Activate Account</button>
+                  <button class="btn btn-danger btn-sm w-100" id="btn-user-deactivate">Deactivate Account</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- User Complaint metrics & Queue list -->
+            <div class="col-md-7">
+              <div class="card-section mb-4">
+                <h4 class="card-section-title">Complaint Status Summary</h4>
+                <div class="row text-center g-2" style="font-size: 12px;">
+                  <div class="col-4"><div class="p-2 border rounded bg-light"><strong>Total</strong><br><span id="u-metric-total" class="fw-bold fs-5">0</span></div></div>
+                  <div class="col-4"><div class="p-2 border rounded bg-light"><strong>Pending</strong><br><span id="u-metric-pending" class="fw-bold fs-5 text-warning">0</span></div></div>
+                  <div class="col-4"><div class="p-2 border rounded bg-light"><strong>Resolved</strong><br><span id="u-metric-resolved" class="fw-bold fs-5 text-success">0</span></div></div>
+                </div>
+              </div>
+
+              <div class="card-section">
+                <h4 class="card-section-title">Citizen Grievance History</h4>
+                <div class="table-responsive" style="max-height: 250px;">
+                  <table class="table table-sm" style="font-size: 12.5px;">
+                    <thead>
+                      <tr>
+                        <th>Grievance ID</th>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="u-complaints-tbody">
+                      <tr><td colspan="4" class="text-center text-muted">No complaints logged.</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 7. DEPARTMENT MANAGEMENT VIEW ================= -->
+      <section id="admin-departments-view" class="view-section">
+        <div class="container" style="max-width: 800px;">
+          <div class="card-section">
+            <div class="card-section-title d-flex justify-content-between align-items-center">
+              <span>Department Configuration Management</span>
+              <button class="btn btn-primary btn-sm" id="btn-add-dept-trigger">🏢 Add Department</button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="custom-table" id="admin-departments-table">
+                <thead>
+                  <tr>
+                    <th>Department ID</th>
+                    <th>Department Name</th>
+                    <th>Actions Column</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-departments-tbody">
+                  <!-- Loaded dynamically -->
+                  <tr><td colspan="3" class="text-center text-muted">No departments created.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 8. REPORTS EXPORT MODULE VIEW ================= -->
+      <section id="admin-reports-view" class="view-section">
+        <div class="container" style="max-width: 900px;">
+          <div class="back-btn-wrapper">
+            <button class="back-btn" id="btn-reports-back">← Back to Dashboard</button>
+          </div>
+          
+          <div class="card-section">
+            <h3 class="card-section-title">Reports & Export Centre</h3>
+            <p class="text-muted fs-6">Select a report filter range to compile datasets. Export immediately into spreadsheet formats or formatted PDF files.</p>
+
+            <form id="reports-generate-form">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="report-type-select" class="form-label fw-bold">Report Interval Type</label>
+                  <select id="report-type-select" class="form-control" required>
+                    <option value="daily">Daily Reports (Today)</option>
+                    <option value="weekly">Weekly Reports (Last 7 Days)</option>
+                    <option value="monthly">Monthly Reports (Last 30 Days)</option>
+                    <option value="yearly">Yearly Reports (Current Year)</option>
+                    <option value="department">Department-specific Reports</option>
+                  </select>
+                </div>
+                <div class="col-md-6" id="report-dept-group" style="display: none;">
+                  <label for="report-dept-select" class="form-label fw-bold">Choose Department</label>
+                  <select id="report-dept-select" class="form-control">
+                    <option value="all">All Departments</option>
+                    <!-- Populated dynamically -->
+                  </select>
+                </div>
+                <div class="col-12 d-flex justify-content-end gap-2 mt-4">
+                  <button type="button" class="btn btn-secondary" id="btn-clear-reports">Clear</button>
+                  <button type="submit" class="btn btn-primary">Compile Dataset</button>
+                </div>
+              </div>
+            </form>
+
+            <!-- Compiled reports table preview -->
+            <div id="compiled-reports-preview-box" class="border-top pt-4 mt-4" style="display: none;">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">Compiled Dataset Preview (<span id="compiled-report-count">0</span> items)</h5>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-success btn-sm" id="btn-export-excel">🟢 Export Excel</button>
+                  <button class="btn btn-danger btn-sm" id="btn-export-pdf">🔴 Export PDF</button>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-striped table-sm" id="compiled-reports-table" style="font-size: 12.5px;">
+                  <thead>
+                    <tr>
+                      <th>Complaint ID</th>
+                      <th>Citizen Name</th>
+                      <th>Title</th>
+                      <th>Category</th>
+                      <th>Department</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="compiled-reports-tbody">
+                    <!-- Dynamically populated -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 9. ADMIN PROFILE VIEW ================= -->
+      <section id="admin-profile-view" class="view-section">
+        <div class="container" style="max-width: 700px;">
+          <div class="back-btn-wrapper">
+            <button class="back-btn" id="btn-profile-back">← Back to Dashboard</button>
+          </div>
+          <div class="card-section">
+            <h3 class="card-section-title">Admin Profile Settings</h3>
+            
+            <form id="admin-profile-form">
+              <div class="text-center mb-4">
+                <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center" style="width: 70px; height: 70px; font-size: 28px;">⚙️</div>
+                <h5 class="fw-bold mt-2" id="admin-name-header">Officer Name</h5>
+                <p class="text-muted small" id="admin-role-header">Role: Admin</p>
+              </div>
+              
+              <div class="form-group">
+                <label for="adm-name">Full Officer Name</label>
+                <input type="text" id="adm-name" class="form-control" required>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="adm-username">Username</label>
+                  <input type="text" id="adm-username" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                  <label for="adm-email">Officer Email Address</label>
+                  <input type="email" id="adm-email" class="form-control" required>
+                </div>
+              </div>
+              
+              <div class="border-top mt-4 pt-3">
+                <h5 class="fw-bold mb-3 text-secondary">Change Password</h5>
+                <div class="form-group">
+                  <label for="adm-password">New Password (Leave blank to keep current)</label>
+                  <input type="password" id="adm-password" class="form-control" placeholder="••••••••">
+                </div>
+              </div>
+              
+              <div class="form-error mb-3" id="admin-profile-error">Error saving changes.</div>
+              <div class="text-success mb-3 small fw-bold" id="admin-profile-success" style="display: none;">Changes saved successfully!</div>
+              
+              <div class="d-flex justify-content-end mt-4">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div> <!-- End App Shell -->
+
+  <!-- Toast Notification Wrapper -->
+  <div id="toast-container"></div>
+
+  <!-- Delete Confirm Modal (Bootstrap 5 modal) -->
+  <div class="modal fade" id="deleteComplaintModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Delete Complaint</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this grievance? This will permanently remove the record from the master database.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger btn-sm" id="btn-confirm-delete-complaint">Delete Record</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Citizen Modal -->
+  <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Delete Citizen Account</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this citizen? This action cascades to delete all their logged complaints and timelines from the database.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger btn-sm" id="btn-confirm-delete-user">Delete User</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Department Modal -->
+  <div class="modal fade" id="addDeptModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="deptModalTitle">Add Department</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="dept-editor-form">
+          <div class="modal-body">
+            <input type="hidden" id="edit-dept-id">
+            <div class="form-group">
+              <label for="dept-name-input">Department Name</label>
+              <input type="text" id="dept-name-input" class="form-control" placeholder="e.g. Sanitation Department" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm">Save Department</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Department Delete Confirm Modal -->
+  <div class="modal fade" id="deleteDeptModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">Delete Department</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this department?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger btn-sm" id="btn-confirm-delete-dept">Delete Department</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- SheetJS CDN (Excel Export) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <!-- jsPDF & AutoTable CDNs (PDF Export) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- Admin logic admin.js -->
+  <script src="/js/admin.js"></script>
+</body>
+</html>

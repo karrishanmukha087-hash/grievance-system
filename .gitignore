@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Local Node portable bin
+scratch/node-portable/
+
+# Environments
+.env
+
+# Uploads and temporary files
+public/uploads/*
+!public/uploads/.gitkeep
+scratch/*.zip
+scratch/*.log
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
