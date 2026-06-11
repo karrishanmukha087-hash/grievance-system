@@ -715,7 +715,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
   <!-- Mock API for Github Pages static hosting -->
-  <script src="js/mockApi.js"></script>
+  <script>
+    document.write('<script src="js/mockApi.js?t=' + new Date().getTime() + '"><\/script>');
+  </script>
   <!-- Admin logic admin.js -->
   <script src="js/admin.js"></script>
 </body>
