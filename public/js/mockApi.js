@@ -73,8 +73,8 @@
     const currentUser = getAuthenticatedUser(headers);
 
     // Automatically route to the centralized backend when deployed live on GitHub Pages
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
-    const backendUrl = isLocalhost ? '' : 'https://xipbt-103-138-0-172.run.pinggy-free.link';
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const backendUrl = isLocalhost ? '' : 'https://public-grievance-system-m21s.onrender.com';
     if (backendUrl && path.startsWith('/api/')) {
       const targetUrl = backendUrl + path + parsedUrl.search;
       const headersCopy = { ...headers };
