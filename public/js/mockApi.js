@@ -1,4 +1,4 @@
-// Mock API Interceptor for GitHub Pages / Static Hosting (mockApi.js)
+﻿// Mock API Interceptor for GitHub Pages / Static Hosting (mockApi.js)
 (function() {
   const isStaticHosting = window.location.hostname.includes('github.io') || window.location.protocol === 'file:';
   if (!isStaticHosting) return; // Do not intercept if running on real backend
@@ -74,7 +74,7 @@
 
     // Automatically route to the centralized backend when deployed live on GitHub Pages
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
-    const backendUrl = isLocalhost ? '' : 'https://pgp-gateway-karrishanmukha.loca.lt';
+    const backendUrl = isLocalhost ? '' : 'https://small-files-see.loca.lt';
     if (backendUrl && path.startsWith('/api/')) {
       const targetUrl = backendUrl + path + parsedUrl.search;
       const headersCopy = { ...headers };
@@ -605,3 +605,4 @@
   };
 
 })();
+
