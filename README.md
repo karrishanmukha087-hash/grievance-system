@@ -5,8 +5,8 @@ A complete, professional, secure, and responsive Public Grievance Portal where c
 ---
 
 ## 🌐 Live Website Links
-* **Citizen Portal (Live)**: [https://karrishanmukha087-hash.github.io/public-grievance-system](https://karrishanmukha087-hash.github.io/public-grievance-system)
-* **Admin Portal (Live)**: [https://karrishanmukha087-hash.github.io/public-grievance-system/admin.html](https://karrishanmukha087-hash.github.io/public-grievance-system/admin.html)
+* **Citizen Portal (Live)**: [https://karrishanmukha087-hash.github.io/grievance-system](https://karrishanmukha087-hash.github.io/grievance-system)
+* **Admin Portal (Live)**: [https://karrishanmukha087-hash.github.io/grievance-system/admin.html](https://karrishanmukha087-hash.github.io/grievance-system/admin.html)
 
 ### 🔑 Default Credentials
 * **Admin Username/Email**: `admin` or `admin@grievanceportal.gov`
