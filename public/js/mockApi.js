@@ -89,11 +89,20 @@
         delete headersCopy['content-type'];
       }
       
-      return originalFetch(targetUrl, {
-        method,
-        headers: headersCopy,
-        body: options.body
-      });
+      try {
+        const response = await originalFetch(targetUrl, {
+          method,
+          headers: headersCopy,
+          body: options.body
+        });
+        if (response.status === 502 || response.status === 503 || response.status === 504) {
+          throw new Error('Tunnel server error ' + response.status);
+        }
+        return response;
+      } catch (err) {
+        console.warn('[MOCK API] Remote connection failed, falling back to local database:', err.message);
+        // Fall through to local storage handlers below
+      }
     }
 
     // Response Helper
