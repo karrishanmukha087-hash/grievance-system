@@ -16,33 +16,19 @@ document.addEventListener('DOMContentLoaded', () => {
       loader.className = 'global-loader';
       document.body.appendChild(loader);
     }
-    if (!document.getElementById('global-spinner')) {
-      const spinnerOverlay = document.createElement('div');
-      spinnerOverlay.id = 'global-spinner';
-      spinnerOverlay.className = 'global-spinner-overlay';
-      
-      const spinner = document.createElement('div');
-      spinner.className = 'premium-spinner';
-      spinnerOverlay.appendChild(spinner);
-      
-      document.body.appendChild(spinnerOverlay);
-    }
   }
 
   function showLoader() {
     initGlobalLoader();
     activeRequestCount++;
     document.getElementById('global-loader').classList.add('active');
-    document.getElementById('global-spinner').classList.add('active');
   }
 
   function hideLoader() {
     activeRequestCount = Math.max(0, activeRequestCount - 1);
     if (activeRequestCount === 0) {
       const loader = document.getElementById('global-loader');
-      const spinner = document.getElementById('global-spinner');
       if (loader) loader.classList.remove('active');
-      if (spinner) spinner.classList.remove('active');
     }
   }
 
