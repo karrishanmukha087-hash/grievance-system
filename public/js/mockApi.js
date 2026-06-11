@@ -5,6 +5,106 @@
 
   console.log('[MOCK API] Intercepting all backend requests using localStorage database.');
 
+  // --- CONNECTION STATE & VISUAL STATUS BADGE ---
+  let connectionMode = 'unknown'; // 'cloud' or 'local'
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
+  const backendUrl = isLocalhost ? '' : 'https://xipbt-103-138-0-172.run.pinggy-free.link';
+
+  function updateConnectionBadge() {
+    let badge = document.getElementById('db-connection-badge');
+    if (!badge) {
+      badge = document.createElement('div');
+      badge.id = 'db-connection-badge';
+      badge.style.fontSize = '12px';
+      badge.style.fontWeight = '600';
+      badge.style.padding = '4px 8px';
+      badge.style.borderRadius = '12px';
+      badge.style.marginLeft = '12px';
+      badge.style.display = 'inline-flex';
+      badge.style.alignItems = 'center';
+      badge.style.gap = '4px';
+      badge.style.cursor = 'pointer';
+      badge.style.marginRight = '8px';
+      
+      const headerRight = document.querySelector('.header-right');
+      if (headerRight) {
+        headerRight.insertBefore(badge, headerRight.firstChild);
+      }
+    }
+    
+    if (connectionMode === 'cloud') {
+      badge.innerHTML = '🟢 Cloud Sync Active';
+      badge.style.backgroundColor = 'rgba(16, 185, 129, 0.15)';
+      badge.style.color = '#10b981';
+      badge.onclick = () => {
+        alert(
+          "🟢 Database Sync is Online\n\n" +
+          "You are successfully connected to the centralized cloud database.\n" +
+          "All registrations, logins, and complaint updates are synchronized across all devices in real time!"
+        );
+      };
+    } else if (connectionMode === 'local') {
+      badge.innerHTML = '🔴 Local Mode (Offline)';
+      badge.style.backgroundColor = 'rgba(239, 68, 68, 0.15)';
+      badge.style.color = '#ef4444';
+      badge.onclick = () => {
+        alert(
+          "⚠️ Database Sync is Offline\n\n" +
+          "Your browser was unable to connect to the centralized database tunnel. This happens if the remote tunnel has expired (runs for 60 mins on free tier) or is blocked.\n\n" +
+          "Your actions are currently stored locally in your browser's Local Storage, meaning they won't sync to other devices.\n\n" +
+          "To fix this:\n" +
+          "1. Ask the administrator to restart the database tunnel.\n" +
+          "2. Check if your mobile network/firewall is blocking the tunnel URL."
+        );
+      };
+    } else {
+      badge.innerHTML = '⚡ Checking connection...';
+      badge.style.backgroundColor = 'rgba(59, 130, 246, 0.15)';
+      badge.style.color = '#3b82f6';
+    }
+  }
+
+  // Probe helper
+  async function probeConnection() {
+    if (isLocalhost) {
+      connectionMode = 'cloud';
+      updateConnectionBadge();
+      return;
+    }
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      const res = await originalFetch(backendUrl + '/api/departments', {
+        method: 'GET',
+        signal: controller.signal,
+        headers: { 'Bypass-Tunnel-Reminder': 'true' }
+      });
+      clearTimeout(timeoutId);
+      if (res.status === 200) {
+        connectionMode = 'cloud';
+      } else {
+        connectionMode = 'local';
+      }
+    } catch (err) {
+      connectionMode = 'local';
+    }
+    updateConnectionBadge();
+  }
+
+  // Run connection status check on load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      updateConnectionBadge();
+      probeConnection();
+    });
+  } else {
+    // Small delay to let headers fully render if script loads immediately
+    setTimeout(() => {
+      updateConnectionBadge();
+      probeConnection();
+    }, 50);
+  }
+
   // --- INITIALIZE MOCK DATABASE ---
   const initStorage = (key, defaultVal) => {
     if (!localStorage.getItem(key)) {
@@ -72,9 +172,6 @@
     const headers = options.headers || {};
     const currentUser = getAuthenticatedUser(headers);
 
-    // Automatically route to the centralized backend when deployed live on GitHub Pages
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
-    const backendUrl = isLocalhost ? '' : 'https://ghdwe-103-138-0-185.run.pinggy-free.link';
     if (backendUrl && path.startsWith('/api/')) {
       const targetUrl = backendUrl + path + parsedUrl.search;
       const headersCopy = { ...headers };
@@ -98,9 +195,17 @@
         if (response.status === 502 || response.status === 503 || response.status === 504) {
           throw new Error('Tunnel server error ' + response.status);
         }
+        if (connectionMode !== 'cloud') {
+          connectionMode = 'cloud';
+          updateConnectionBadge();
+        }
         return response;
       } catch (err) {
         console.warn('[MOCK API] Remote connection failed, falling back to local database:', err.message);
+        if (connectionMode !== 'local') {
+          connectionMode = 'local';
+          updateConnectionBadge();
+        }
         // Fall through to local storage handlers below
       }
     }
