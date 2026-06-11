@@ -714,55 +714,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 
-  <!-- Floating Database Connection Status Badge -->
-  <div class="db-status-badge" id="dbStatusBadge" title="Click to manage database connection settings">
-    <span class="db-status-dot demo" id="dbStatusDot"></span>
-    <span id="dbStatusText">Database: Local Demo</span>
-  </div>
-
-  <!-- Database Connection Configuration Modal -->
-  <div class="modal fade" id="dbSettingsModal" tabindex="-1" aria-labelledby="dbSettingsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title fw-bold" id="dbSettingsModalLabel">Database Connection Settings</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p class="small text-muted mb-3">Configure where the application saves its data. Switch between a local in-browser database or a centralized live server database to sync data across multiple devices.</p>
-          
-          <div class="mb-3">
-            <label class="form-label fw-bold d-block">Database Mode</label>
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="radio" name="dbMode" id="dbModeDemo" value="demo" checked>
-              <label class="form-check-label" for="dbModeDemo">
-                <strong>Local Demo Mode (localStorage)</strong>
-                <span class="d-block small text-muted">Data is saved only inside this browser on this computer. Works instantly.</span>
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="dbMode" id="dbModeLive" value="live">
-              <label class="form-check-label" for="dbModeLive">
-                <strong>Centralized Cloud Database (API Connection)</strong>
-                <span class="d-block small text-muted">Data syncs across multiple devices (e.g. phones, PCs) using a background server.</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="mb-3" id="dbUrlContainer" style="display: none;">
-            <label for="dbBackendUrlInput" class="form-label fw-bold">Backend Server URL</label>
-            <input type="url" class="form-control" id="dbBackendUrlInput" placeholder="https://public-grievance-system-xxxx.onrender.com" value="">
-            <span class="d-block small text-muted mt-1">Paste your Render or Koyeb web service API URL. (Ensure it begins with https://).</span>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary btn-sm" id="btn-save-db-settings">Save Settings</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Mock API for Github Pages static hosting -->
   <script src="js/mockApi.js"></script>
   <!-- Admin logic admin.js -->
