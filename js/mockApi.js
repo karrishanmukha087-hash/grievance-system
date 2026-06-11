@@ -72,6 +72,28 @@
     const headers = options.headers || {};
     const currentUser = getAuthenticatedUser(headers);
 
+    // If a remote backend URL is configured, forward the request to it instead of using mock database
+    const backendUrl = localStorage.getItem('backend_api_url');
+    if (backendUrl && path.startsWith('/api/')) {
+      const targetUrl = backendUrl + path + parsedUrl.search;
+      const headersCopy = { ...headers };
+      
+      const token = localStorage.getItem('token');
+      if (token) {
+        headersCopy['Authorization'] = 'Bearer ' + token;
+      }
+      if (options.body instanceof FormData) {
+        delete headersCopy['Content-Type'];
+        delete headersCopy['content-type'];
+      }
+      
+      return originalFetch(targetUrl, {
+        method,
+        headers: headersCopy,
+        body: options.body
+      });
+    }
+
     // Response Helper
     const respond = (status, data) => {
       return Promise.resolve({
@@ -579,4 +601,78 @@
       return respond(500, { success: false, message: 'Mock API Server Error: ' + e.message });
     }
   };
+
+  // --- DATABASE CONFIGURATION WIDGET & MODAL LISTENER ---
+  document.addEventListener('DOMContentLoaded', () => {
+    const dbStatusBadge = document.getElementById('dbStatusBadge');
+    const dbStatusDot = document.getElementById('dbStatusDot');
+    const dbStatusText = document.getElementById('dbStatusText');
+    const dbSettingsModalEl = document.getElementById('dbSettingsModal');
+    const dbModeDemo = document.getElementById('dbModeDemo');
+    const dbModeLive = document.getElementById('dbModeLive');
+    const dbUrlContainer = document.getElementById('dbUrlContainer');
+    const dbBackendUrlInput = document.getElementById('dbBackendUrlInput');
+    const btnSaveDbSettings = document.getElementById('btn-save-db-settings');
+
+    if (!dbStatusBadge) return; // safety check
+
+    // Initialize Bootstrap Modal
+    const modalInstance = new bootstrap.Modal(dbSettingsModalEl);
+
+    // Read initial settings
+    const backendUrl = localStorage.getItem('backend_api_url');
+    if (backendUrl) {
+      dbStatusDot.className = 'db-status-dot live';
+      dbStatusText.textContent = 'Database: Central Cloud';
+      dbModeLive.checked = true;
+      dbModeDemo.checked = false;
+      dbUrlContainer.style.display = 'block';
+      dbBackendUrlInput.value = backendUrl;
+    } else {
+      dbStatusDot.className = 'db-status-dot demo';
+      dbStatusText.textContent = 'Database: Local Demo';
+      dbModeDemo.checked = true;
+      dbModeLive.checked = false;
+      dbUrlContainer.style.display = 'none';
+      dbBackendUrlInput.value = '';
+    }
+
+    // Toggle URL container on radio change
+    dbModeDemo.addEventListener('change', () => {
+      dbUrlContainer.style.display = 'none';
+    });
+    dbModeLive.addEventListener('change', () => {
+      dbUrlContainer.style.display = 'block';
+    });
+
+    // Open Modal on badge click
+    dbStatusBadge.addEventListener('click', () => {
+      modalInstance.show();
+    });
+
+    // Save Settings
+    btnSaveDbSettings.addEventListener('click', () => {
+      if (dbModeLive.checked) {
+        let url = dbBackendUrlInput.value.trim();
+        if (!url) {
+          alert('Please enter a valid backend API URL.');
+          return;
+        }
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          url = 'https://' + url;
+        }
+        // Remove trailing slash if exists
+        if (url.endsWith('/')) {
+          url = url.substring(0, url.length - 1);
+        }
+        localStorage.setItem('backend_api_url', url);
+        alert('Database configured to Centralized Cloud API: ' + url + '\n\nThe page will now refresh to apply changes.');
+      } else {
+        localStorage.removeItem('backend_api_url');
+        alert('Database configured to Local Demo Mode (localStorage).\n\nThe page will now refresh to apply changes.');
+      }
+      modalInstance.hide();
+      window.location.reload();
+    });
+  });
 })();

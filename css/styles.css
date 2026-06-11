@@ -1297,3 +1297,42 @@ body.dark-theme .faq-header:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* Database Connection Status Badge styles */
+.db-status-badge {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1050;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-lg);
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.db-status-badge:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary-color);
+}
+.db-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.db-status-dot.demo {
+  background-color: #f59e0b; /* Orange */
+  box-shadow: 0 0 8px #f59e0b;
+}
+.db-status-dot.live {
+  background-color: #10b981; /* Green */
+  box-shadow: 0 0 8px #10b981;
+}
