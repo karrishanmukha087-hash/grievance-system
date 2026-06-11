@@ -354,6 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Restore standard Citizen Login button
       authBtnSection.innerHTML = `
         <button class="btn btn-primary btn-sm" data-view="login">Citizen Login</button>
+        <a href="admin.html" class="btn btn-outline-primary btn-sm">Admin Login</a>
       `;
     }
   }
