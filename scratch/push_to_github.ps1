@@ -60,8 +60,7 @@ if ($repoUrl) {
         Write-Host ""
         Write-Host "==================================================" -ForegroundColor Green
         Write-Host "Code pushed to GitHub successfully!" -ForegroundColor Green
-        Write-Host "Please let me know your repository URL in the chat," -ForegroundColor Yellow
-        Write-Host "and I will automatically deploy it to Render for you!" -ForegroundColor Yellow
+        Write-Host "Now configure GitHub Pages to deploy from your gh-pages branch!" -ForegroundColor Yellow
         Write-Host "==================================================" -ForegroundColor Green
     } else {
         Write-Host "Error pushing code. Make sure you are logged in to Git on your computer." -ForegroundColor Red
